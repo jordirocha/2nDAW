@@ -11,25 +11,50 @@
 </head>
 
 <body>
-    <div class="container vh-100 d-flex justify-content-center align-items-center">
-        <div>
-
-            <h3 id="size" class="text-center">Estadísticas de una frase: </h3><br>
+    <div class="min-vh-100 d-flex justify-content-center align-items-center">
+        <div class="container">
+            <h3 class="text-center">Estadísticas de una frase: </h3><br>
             <div class="row g-3">
-                <div class="col-auto">
-                    <label class="col-form-label">
-                        Frase:
-                    </label>
-                </div>
-                <div class="col-auto">
-                    <input type="text" id="sentence" class="form-control" placeholder="Coser y cantar">
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="sentence"
+                        style="height: 100px"></textarea>
+                    <label>Introduce frase</label>
                 </div>
                 <div class="col-auto">
                     <button id="btnSubmit" class="btn btn-primary mb-3">Confirmar</button>
                 </div>
             </div>
-            <p id="result" class="text-center"></p>
+            <div>
+                <h5>Letras:</h5>
+                <p id="result"></p>
+            </div>
+            <div>
+                <h5>Total de palabras:</h5>
+                <p id="size"></p>
+            </div>
+            <div>
+                <h5>Primera palabra:</h5>
+                <p id="firstWord"></p>
+            </div>
+            <div>
+                <h5>Última palabra:</h5>
+                <p id="lastWord"></p>
+            </div>
+            <div>
+                <h5>Palabras en orden inverso:</h5>
+                <p id="inverted"></p>
+            </div>
+            <div>
+                <h5>Palabras ordenadas de A a Z:</h5>
+                <p id="asc"></p>
+            </div>
+            <div>
+                <h5>Palabras ordenadas de Z a A:</h5>
+                <p id="desc"></p>
+            </div>
         </div>
+
+    </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
