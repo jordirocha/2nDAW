@@ -15,7 +15,7 @@ function checkString() {
     result.innerHTML = "";
     let str = document.getElementById("sentence").value;
 
-    // Used to get first word, last, show inverted sentence and total size
+    // Used to get first word, last, show inverted sentence, sorting asc/desc and total size
     let copyStr = str;
     copyStr = copyStr.split(" ");
 
@@ -79,6 +79,7 @@ function sortASC(str) {
 }
 
 function showInverted(str) {
+    inverted.innerHTML = "";
     for (let i = str.length - 1; i >= 0; i--) {
         inverted.innerHTML += str[i] + " ";
     }
