@@ -1,7 +1,7 @@
 # CFGS Desarrollo de Aplicaciones Web
 Temario, apuntes, examenes y ejercicios del módulo de Desarrollo de Aplicaciones Web (DAW).
 
-## Primer año (DAW2):
+## Segundo año (DAW2):
 - Entorns de desenvolupament
 - Desenvolupament Web en entorn client
 - Desenvolupament web en entorn servidor
