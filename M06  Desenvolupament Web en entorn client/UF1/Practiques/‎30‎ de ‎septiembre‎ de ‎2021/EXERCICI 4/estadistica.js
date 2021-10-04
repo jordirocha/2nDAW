@@ -15,26 +15,31 @@ function checkString() {
     result.innerHTML = "";
     let str = document.getElementById("sentence").value;
 
+    str = str.toLowerCase();
+
     // Used to get first word, last, show inverted sentence, sorting asc/desc and total size
-    let copyStr = str;
+    let copyStr = str.replace(/[,¿?¡!\.-;]/g, "");;
     copyStr = copyStr.split(" ");
 
     // Cleaned of specials characters
     str = cleanString(str);
 
-    // String converted to array
+    // converted to array, each letter
     let srtArray = str.split("");
 
-    showLettersRepeated(srtArray);
-    getFirstWord(copyStr);
-    getLastWord(copyStr);
-    totalWords(copyStr);
+    showWordsRepeated(srtArray);
+    size.innerText = `${copyStr.length}`;
+    firstWord.innerText = `${copyStr[0].toUpperCase()}`;
+    lastWord.innerText = `${copyStr[copyStr.length - 1].toUpperCase()}`;
+    // getFirstWord(copyStr);
+    // getLastWord(copyStr);
+    // totalWords(copyStr);
     showInverted(copyStr);
     sortASC(copyStr);
     sortDESC(copyStr);
 }
 
-function showLettersRepeated(srtArray) {
+function showWordsRepeated(srtArray) {
     // Way to get all uniquies characters
     let uniqueChars = [...new Set(srtArray)];
     let repeated = 0;
@@ -52,7 +57,7 @@ function showLettersRepeated(srtArray) {
 function cleanString(str) {
     let newSrt = str;
     newSrt = newSrt.replace(/ /g, "");
-    newSrt = newSrt.replace(/[,¿?¡!\.]/g, "");
+    newSrt = newSrt.replace(/[,¿?¡!\.-]/g, "");
     newSrt = newSrt.replace(/[áà]/g, "a");
     newSrt = newSrt.replace(/[éè]/g, "e");
     newSrt = newSrt.replace(/[íì]/g, "i");
@@ -85,14 +90,14 @@ function showInverted(str) {
     }
 }
 
-function totalWords(str) {
-    size.innerText = `${str.length}`;
-}
+// function totalWords(str) {
+//     size.innerText = `${str.length}`;
+// }
 
-function getFirstWord(str) {
-    firstWord.innerText = `${str[0].toUpperCase()}`;
-}
+// function getFirstWord(str) {
+//     firstWord.innerText = `${str[0].toUpperCase()}`;
+// }
 
-function getLastWord(str) {
-    lastWord.innerText = `${str[str.length - 1].toUpperCase()}`;
-}
+// function getLastWord(str) {
+//     lastWord.innerText = `${str[str.length - 1].toUpperCase()}`;
+// }
