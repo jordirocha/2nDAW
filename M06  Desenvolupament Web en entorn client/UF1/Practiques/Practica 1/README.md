@@ -14,4 +14,3 @@ Programa que :
 
 ## EXERCICI 4
 Realitza una pàgina que faci estadístiques sobre una cadena de text que li passem: comptant el nombre de vegades que apareix cada lletra, nombre de paraules totals, primera paraula, darrera paraula, les paraules col·locades en ordre invers, les paraules ordenades de la a la z i les paraules ordenades de la z a la a. Utilitzar un Array per emmagatzemar la informació estadística.
-
