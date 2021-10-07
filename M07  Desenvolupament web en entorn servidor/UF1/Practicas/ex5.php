@@ -26,6 +26,7 @@
             <br>
             <div>
                 <?php
+                $dias = array("Dilluns", "Dimarts", "Dimecres", "Dijuos", "Divendres", "Dissabte", "Diumenge");
                 if (isset($_POST["num"])) {
                     if ($_POST["num"] >= 1 and $_POST["num"] <= 8) {
                 ?>
@@ -50,7 +51,7 @@
                                         for ($j = 0; $j < 7; $j++) {
                                             $dies++;
                                             echo <<<HER
-                                            <td>  <input class="form-check-input" type="checkbox" value="$dies" name="box[]">
+                                            <td>  <input class="form-check-input" type="checkbox" value="$dies $dias[$j]" name="box[]">
                                             <label class="form-check-label" for="flexCheckDefault">
                                             $dies
                                             </label> </td>
@@ -74,7 +75,7 @@
 
                 <?php
                 if (isset($_POST["box"])) {
-                    echo "Total de dias seleccionados: " .  sizeof($_POST["box"]) . "<br>Dias selecciondos: " . implode(" ", $_POST["box"]);
+                    echo "Total de dias seleccionados: " .  sizeof($_POST["box"]) . "<br>Dias selecciondos: " . implode(", ", $_POST["box"]);
                 }
 
                 ?>

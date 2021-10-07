@@ -15,13 +15,22 @@
         <div>
             <h1 class="text-center">Resultados ejercicio 6</h1>
             <?php
+            // Mostramos los numeros introducidos
             $nums = $_POST["numeros"];
-            echo "Números: " . implode(" ", $_POST["numeros"]);
-            $total = 0;
-            for ($i = 0; $i < sizeof($nums); $i++) {
-                $total += $nums[$i];
+            echo "Números: " . implode(", ", $_POST["numeros"]);
+
+            if (isset($_POST["resultado"]) and $_POST["resultado"] == "media") {
+                $total = 0;
+                for ($i = 0; $i < sizeof($nums); $i++) {
+                    $total += $nums[$i];
+                }
+                echo "<br>Media aritmetica: " . $total / sizeof($nums);
             }
-            echo "<br>Media aritmetica: " . $total/sizeof($nums);
+
+            if (isset($_POST["resultado"]) and $_POST["resultado"] == "mayor") {
+                echo "<br>Número mayor: " . max($nums);
+            }
+
             ?>
         </div>
     </div>

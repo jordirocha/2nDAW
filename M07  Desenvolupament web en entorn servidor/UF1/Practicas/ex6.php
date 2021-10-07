@@ -30,7 +30,6 @@
                     if ($_POST["num"] >= 1) {
 
                 ?>
-
                         <form class="row g-3" action="resultado6.php" method="POST">
                             <div class="col-12">
                                 <label for="number" class="form-label">Numero</label>
@@ -44,13 +43,28 @@
 
                                 ?>
                             </div>
+                            <div class="col-6">
+                                <label for="inputAddress2" class="form-label">Resultado</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="media" type="radio" name="resultado">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        Media aritmetica
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="mayor" type="radio" name="resultado">
+                                    <label class="form-check-label" for="flexRadioDefault2">
+                                        Mayor
+                                    </label>
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Resultados</button>
                             </div>
                         </form>
-
-
                 <?php
+                    } else {
+                        echo "No es mayor 1";
                     }
                 }
                 ?>
