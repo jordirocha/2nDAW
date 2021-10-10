@@ -1,25 +1,28 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("btnSubmit").addEventListener("click", check);
-
 });
 
 function check() {
-
     // Div elements on we insert fail or success
     let feedName = document.getElementById("feedName");
     let feedLast = document.getElementById("feedLast");
     let feedAge = document.getElementById("feedAge");
 
-    // Input elemetns
+    // Input elements
     let fname = document.getElementById("name");
     let lastname = document.getElementById("lname");
     let age = document.getElementById("age");
+
+    let boolName = false;
+    let boolLast = false;
+    let boolAge = false;
 
     if (fname.value == "" || fname.value == null || fname.value.length == 0) {
         failure(feedName, fname);
         fname.classList.contains("is-invalid") ? feedName.innerText = "Name cannot be empty" : "";
     } else {
+        boolName = true;
         success(feedName, fname);
         fname.classList.contains("is-valid") ? feedName.innerText = fname.value + " looks good" : "";
     }
@@ -28,10 +31,10 @@ function check() {
         failure(feedLast, lastname);
         lastname.classList.contains("is-invalid") ? feedLast.innerText = "Last name cannot be empty" : "";
     } else {
+        boolLast = true;
         success(feedLast, lastname);
         lastname.classList.contains("is-valid") ? feedLast.innerText = lastname.value + " looks good" : "";
     }
-
 
     if (age.value == null || age.value == "" || isNaN(age.value) || age.value <= 0) {
         failure(feedAge, age);
@@ -45,10 +48,22 @@ function check() {
             }
         }
     } else {
-        failure(feedAge, age);
+        boolAge = true;
+        console.log(boolAge);
+        success(feedAge, age);
         age.classList.contains("is-valid") ? feedAge.innerText = age.value + " looks good" : "";
     }
 
+    if (boolAge && boolLast && boolName) {
+        let alertDiv = document.createElement("div");
+        alertDiv.id = "alert"
+        alertDiv.classList.add("alert");
+        alertDiv.classList.add("alert-success");
+        alertDiv.innerText = "All okay!";
+        !document.body.contains(document.getElementById("alert")) ? document.getElementById("main").appendChild(alertDiv) : "";
+    } else {
+        document.body.contains(document.getElementById("alert")) ? document.getElementById("alert").remove() : "";
+    }
 
 }
 
