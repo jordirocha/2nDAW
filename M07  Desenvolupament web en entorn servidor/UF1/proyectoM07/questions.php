@@ -1,5 +1,4 @@
 <?php
-// $alphabet = range('A', 'Z');
 $arrayEnquesta =
     [
         "4IVDr8" => "Test de cultura general; 

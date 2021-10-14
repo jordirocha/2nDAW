@@ -52,6 +52,7 @@ require_once "questions.php";
         if (isset($_POST["codeInput"])) {
             $_SESSION["key"] =  filter_input(INPUT_POST, "code", FILTER_SANITIZE_SPECIAL_CHARS);
             if (preg_match('/^[a-zA-Z0-9]{4,10}+$/', $_SESSION["key"])) {
+                  // Form for the test
                 displayTest(array_key_exists($_SESSION["key"], $arrayEnquesta), $arrayEnquesta);
             } else {
                 echo <<<HER
@@ -59,7 +60,7 @@ require_once "questions.php";
                 HER;
             }
         }
-
+        // Last form with conclusions and button to generate PDF
         if (isset($_POST["results"])) {
             checkAnswers($arrayRespostes);
         }

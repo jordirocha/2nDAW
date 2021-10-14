@@ -39,18 +39,20 @@ function displayTest($existCode, $arrayEnquesta)
 <?php
     } else {
         echo <<<HER
-    <div class="alert alert-danger" role="alert">{$_SESSION["key"]} don't exist in the array.</div>
-    HER;
+            <div class="alert alert-danger" role="alert">{$_SESSION["key"]} doesn't exist in the array.</div>
+        HER;
     }
 }
 
 function checkAnswers($arrayRespostes)
 {
+    // [0]=> "0A" [1]=> "1C" [2]=> "2B" [3]=> "3B" [4]=> "4C"
     $solutions = explode(';', $arrayRespostes[$_SESSION["key"]]);
     $ok = 0;
     $mssgOk = "";
     $mssgFail = "";
     for ($i = 0; $i < sizeof($solutions); $i++) {
+        // Each question we selected will be compared whit correct one, example: 1A == 0A? = False...
         if ($solutions[$i] == $_POST[$i]) {
             $ok++;
             $mssgOk .= $i + 1 . ", ";
