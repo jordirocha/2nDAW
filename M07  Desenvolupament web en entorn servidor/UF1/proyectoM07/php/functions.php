@@ -1,4 +1,5 @@
 <?php
+// Function that insert the quiz form that user introduce to the input
 function displayTest($arrayEnquesta, $code)
 {
     $numQuestion = 0;
@@ -9,6 +10,7 @@ function displayTest($arrayEnquesta, $code)
         <?php
         echo '<h2 class="mt-5 mb-4">' . $questions[0] . '</h2>';
         for ($i = 1; $i < sizeof($questions); $i++) {
+            // All odd are questions and all even are possible answers
             if ($i % 2 != 0) {
                 echo <<<HER
                 <p class="form-text">Selecciona la respuesta correcta</p>
@@ -24,14 +26,13 @@ function displayTest($arrayEnquesta, $code)
                     $answers[$j]
                     </label>
                     </div>
-                HER;
+                    HER;
                 }
                 $numQuestion++;
                 echo "<br>";
             }
         }
         ?>
-
         <div class="col-12">
             <div class="d-none">
                 <input type="text" class="form-control" value="<?php echo $code ?>" name="code" />
@@ -41,19 +42,23 @@ function displayTest($arrayEnquesta, $code)
     </form>
 <?php
 }
-
+// Function that cheks if the answers are correct or not, will show both results
 function checkAnswers($arrayRespostes, $code)
 {
-    // [0]=> "0A" [1]=> "1C" [2]=> "2B" [3]=> "3B" [4]=> "4C"
+    // All anwsers [0]=> "0A" [1]=> "1C" [2]=> "2B" [3]=> "3B" [4]=> "4C"
     $solutions = explode(';', $arrayRespostes[$code]);
     $ok = 0;
     $mssgOk = "";
     $mssgFail = "";
     for ($i = 0; $i < sizeof($solutions); $i++) {
         // Each question we selected will be compared whit correct one, example: 1A == 1C? = False...
-        if ($solutions[$i] == $_POST[$i]) {
-            $ok++;
-            $mssgOk .= $i + 1 . ", ";
+        if (isset($_POST[$i])) {
+            if ($solutions[$i] == $_POST[$i]) {
+                $ok++;
+                $mssgOk .= $i + 1 . ", ";
+            } else {
+                $mssgFail .= $i + 1 . ", ";
+            }
         } else {
             $mssgFail .= $i + 1 . ", ";
         }
@@ -74,7 +79,7 @@ function checkAnswers($arrayRespostes, $code)
         </form>
     EOT;
 }
-
+// Function that inserts structure of HTML, useful when we have more than once page 
 function loadBody()
 {
     echo <<<HER
@@ -85,8 +90,10 @@ function loadBody()
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="css/index.css">
             <title>PRÀCTICA PUNTUABLE (DAW-2)</title>
         </head>
 
@@ -100,7 +107,7 @@ function loadBody()
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Login</a>
