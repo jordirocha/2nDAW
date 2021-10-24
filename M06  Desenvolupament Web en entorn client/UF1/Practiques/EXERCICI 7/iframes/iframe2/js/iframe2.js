@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', function () {
     document.getElementById("btnOpen").addEventListener("click", function () {
         myWindow = window.open("../../popup/popup.html", "Print tickets", "width=1280, height=720");
 
-        let name = window.parent.document.getElementById("iframe1").contentWindow.document.getElementById("name").value;
+        let name = window.parent.document.getElementById("iframe1").contentWindow.document.getElementById("userName").value;
         let show = window.parent.document.getElementById("iframe1").contentWindow.document.getElementById("show");
         let ticket = window.parent.document.getElementById("iframe1").contentWindow.document.getElementById("ticket").value;
         var nameShow = show.options[show.selectedIndex].text;
