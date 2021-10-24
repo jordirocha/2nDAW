@@ -1,6 +1,6 @@
 <?php
-require_once "php/functions.php";
-require_once "php/questions.php";
+require_once "functions.php";
+require_once "questions.php";
 loadBody()
 ?>
 <form class="row g-3 mt-5" method="POST" action="index.php">
@@ -22,7 +22,7 @@ if (isset($_POST["code"])) {
         // If is the code exists in the array we'll redirect to user to do quiz page
         // in case of not exist displays an error
         if (key_exists($code, $arrayEnquesta)) {
-            header("Location: php/quiz.php?code=$code");
+            header("Location: quiz.php?code=$code");
         } else {
             echo <<<HER
                 <div class="alert alert-danger" role="alert">{$code} doesn't exist in our quiz.</div>
