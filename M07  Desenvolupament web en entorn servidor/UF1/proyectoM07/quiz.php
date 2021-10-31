@@ -5,6 +5,9 @@ loadBody();
 
 // Inserts the quiz form that user introduce on the input
 $code = $_GET['code'];
+$file = fopen("enquestes/4IVDr8.txt", "r");
+echo fgets($file);
+echo "helloWorld";
 $numQuestion = 0;
 $alphabet = range('A', 'Z');
 $questions = explode(';', $arrayEnquesta[$code]);
