@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 import storeapp.model.Product;
 import storeapp.model.StoreAppModel;
+import static java.lang.System.out;
 
 /**
  *
@@ -14,7 +15,7 @@ import storeapp.model.StoreAppModel;
  */
 public class Main {
 
-    StoreAppModel storeApp;
+    StoreAppModel storeApp; // The list of products
     private List<String> menu; // The menu of the application
     private boolean exit; // Flag to exit
 
@@ -39,7 +40,7 @@ public class Main {
         generateMenu();
         do {
             int choice = displaySelector(menu);
-            System.out.println("");
+            out.println("");
             switch (choice) {
                 case 0 ->
                     exitApp();
@@ -58,10 +59,10 @@ public class Main {
 //                case 7 ->
 //                    SearchByType();
                 default -> {
-                    System.out.println("Not valid option");
+                    out.println("Not valid option");
                 }
             }
-            System.out.println("");
+            out.println("");
 
         } while (!exit);
 
@@ -89,7 +90,7 @@ public class Main {
         if (allProducts != null) {
             displayList(allProducts);
         } else {
-            System.out.println("No data to display");
+            out.println("No data to display");
         }
     }
 
@@ -109,9 +110,9 @@ public class Main {
     private int displaySelector(List<String> options) {
         Scanner sc = new Scanner(System.in);
         for (int i = 0; i < options.size(); i++) {
-            System.out.format("%d. %s\n", i, options.get(i));
+            out.format("%d. %s\n", i, options.get(i));
         }
-        System.out.print("Enter your option: ");
+        out.print("Enter your option: ");
         int option;
         try {
             option = sc.nextInt();
@@ -128,9 +129,9 @@ public class Main {
         String sCode = inputString("Introduce code to search: ");
         Product art = storeApp.getArticle(sCode);
         if (art != null) {
-            System.out.println(art.toString());
+            out.println(art.toString());
         } else {
-            System.out.println("Article not found in our store");
+            out.println("Article not found in our store");
         }
     }
 
@@ -148,15 +149,15 @@ public class Main {
                 int stock = parseInt(sInches);
                 Product temp = new Product(sCode, sName, price, stock);
                 if (storeApp.add(temp)) {
-                    System.out.println("New product " + sName + " added correctly");
+                    out.println("New product " + sName + " added correctly");
                 } else {
-                    System.out.println("Error on adding product");
+                    out.println("Error on adding product");
                 }
             } catch (NumberFormatException nfe) {
-                System.out.println("Error on parsing values");
+                out.println("Error on parsing values");
             }
         } else {
-            System.out.println("Already exists in our store");
+            out.println("Already exists in our store");
         }
     }
 
@@ -179,19 +180,19 @@ public class Main {
                     Product selected = storeApp.getArticle(scode);
                     Product newValues = new Product(sNewCode, sName, newPrice, newStock);
                     if (storeApp.update(selected, newValues)) {
-                        System.out.println("Article successfuly updated");
+                        out.println("Article successfuly updated");
                     } else {
-                        System.out.println("Error on updating article");
+                        out.println("Error on updating article");
                     }
                 } else {
-                    System.out.println("Canceled by user");
+                    out.println("Canceled by user");
                 }
 
             } catch (NumberFormatException nfe) {
-                System.out.println("Error on parsing values");
+                out.println("Error on parsing values");
             }
         } else {
-            System.out.println("Product don't found");
+            out.println("Product don't found");
         }
     }
 
@@ -203,19 +204,19 @@ public class Main {
         displayAllProducts();
         String sCode = inputString("Enter the code to remove: ");
         if (storeApp.existCode(sCode)) {
-            System.out.println("Article to remove is: " + sCode);
+            out.println("Article to remove is: " + sCode);
             if (confirm("Are you sure? [True/False] ")) {
                 Product artDelete = storeApp.getArticle(sCode);
                 if (storeApp.delete(artDelete)) {
-                    System.out.println("Article successfully remove from store");
+                    out.println("Article successfully remove from store");
                 } else {
-                    System.out.println("Error on removing article");
+                    out.println("Error on removing article");
                 }
             } else {
-                System.out.println("Canceled by user");
+                out.println("Canceled by user");
             }
         } else {
-            System.out.println("Product selected don't exist");
+            out.println("Product selected don't exist");
         }
     }
 
@@ -227,7 +228,7 @@ public class Main {
      */
     private String inputString(String question) {
         Scanner sc = new Scanner(System.in);
-        System.out.print(question);
+        out.print(question);
         return sc.nextLine();
     }
 
@@ -237,15 +238,15 @@ public class Main {
      * @param store
      */
     private void displayList(List<Product> store) {
-        System.out.println(GREEN_BOLD + "-----------------------------------------------------------------------------");
-        System.out.printf(GREEN_BOLD + "%5s %25s %20s %15s", "ART. ID", "NAME", "PRICE", "STOCK");
-        System.out.println();
-        System.out.println(GREEN_BOLD + "-----------------------------------------------------------------------------");
+        out.println("-----------------------------------------------------------------------------");
+        out.printf("%5s %25s %20s %15s", "ART. ID", "NAME", "PRICE", "STOCK");
+        out.println();
+        out.println("-----------------------------------------------------------------------------");
         for (Product art : store) {
-            System.out.format(GREEN_BOLD + "%5s %25s %20s %15d", art.getCode(), art.getName(), art.getPrice(), art.getStock());
-            System.out.println();
+            out.format("%5s %25s %20s %15d", art.getCode(), art.getName(), art.getPrice(), art.getStock());
+            out.println();
         }
-        System.out.format("\n" + GREEN_BOLD + "Number of elements: %d\n", store.size());
+        out.format("\nNumber of elements: %d\n", store.size());
     }
 
     /**
@@ -256,7 +257,7 @@ public class Main {
      */
     private boolean confirm(String message) {
         Scanner sc = new Scanner(System.in);
-        System.out.print(message);
+        out.print(message);
         return sc.nextBoolean();
     }
 
@@ -271,15 +272,11 @@ public class Main {
             if (products.size() > 0) {
                 displayList(products);
             } else {
-                System.out.println("No products under stock given");
+                out.println("No products under stock given");
             }
         } catch (NumberFormatException nfe) {
-            System.out.println("Error on parsing value");
+            out.println("Error on parsing value");
         }
     }
-    /**
-     * GREEN color for console
-     */
-    public static final String GREEN_BOLD = "\033[1;32m";
 
 }
