@@ -69,7 +69,7 @@ public class Main {
     }
 
     /**
-     * Create the menu for the user interaction
+     * Creates the menu for the user interaction
      */
     private void generateMenu() {
         menu.add("Exit");
@@ -95,7 +95,7 @@ public class Main {
     }
 
     /**
-     * Close application changin flag to true
+     * Closes application
      */
     private void exitApp() {
         this.exit = true;
@@ -123,11 +123,13 @@ public class Main {
     }
 
     /**
-     * Search an article by code
+     * Asks the user to input the code of the article to be searched, searches
+     * the article in the data, if its found will display all specs of the
+     * article
      */
     private void searchByCode() {
         String sCode = inputString("Introduce code to search: ");
-        Product art = storeApp.getArticle(sCode);
+        Product art = storeApp.findArticle(sCode);
         if (art != null) {
             out.println(art.toString());
         } else {
@@ -136,7 +138,8 @@ public class Main {
     }
 
     /**
-     * Adds an article to source data
+     * Aks the user to input the code, if code doesnt exits will continue with
+     * next values to add and then reposts resuts to user
      */
     private void addArticle() {
         String sCode = inputString("Enter a code: ");
@@ -147,23 +150,21 @@ public class Main {
                 double price = Double.parseDouble(sPrice);
                 String sInches = inputString("Enter a stock: ");
                 int stock = parseInt(sInches);
-                Product temp = new Product(sCode, sName, price, stock);
-                if (storeApp.add(temp)) {
-                    out.println("New product " + sName + " added correctly");
-                } else {
-                    out.println("Error on adding product");
-                }
+                Product artToAdd = new Product(sCode, sName, price, stock);
+                String resultMsg = (storeApp.add(artToAdd) ? "Article successfully added" : "Error adding article");
+                out.println(resultMsg);
             } catch (NumberFormatException nfe) {
                 out.println("Error on parsing values");
             }
         } else {
-            out.println("Already exists in our store");
+            out.println("Code introduced already exists in our store");
         }
     }
 
     /**
-     * Firstly prompts to user the article to modify, then asks new values of
-     * the article selected
+     * Asks to user to input code to modify an article, verifies that the
+     * article exists in data, then aks to user to input the other values to
+     * add, before to add aks for confirmation and then reports results to user
      */
     private void modifyArticle() {
         displayAllProducts();
@@ -176,18 +177,14 @@ public class Main {
                 double newPrice = Double.parseDouble(sPrice);
                 String sStock = inputString("Enter new stock: ");
                 int newStock = parseInt(sStock);
-                if (confirm("Are you sure you want to update it? [True/False] ")) {
-                    Product selected = storeApp.getArticle(scode);
-                    Product newValues = new Product(sNewCode, sName, newPrice, newStock);
-                    if (storeApp.update(selected, newValues)) {
-                        out.println("Article successfuly updated");
-                    } else {
-                        out.println("Error on updating article");
-                    }
+                if (confirm("Are you sure you want to update it? [True|true/False|false] ")) {
+                    Product oldArt = storeApp.findArticle(scode);
+                    Product artToUpd = new Product(sNewCode, sName, newPrice, newStock);
+                    String resultMsg = (storeApp.update(oldArt, artToUpd) ? "Article successfuly updated" : "Error on updating article");
+                    out.println(resultMsg);
                 } else {
                     out.println("Canceled by user");
                 }
-
             } catch (NumberFormatException nfe) {
                 out.println("Error on parsing values");
             }
@@ -197,8 +194,9 @@ public class Main {
     }
 
     /**
-     * Aks to user what article want delete from list, must confirm the
-     * operation to completly delete the article
+     * Aks to user to input code to delete an article, verifies that the article
+     * exits in data, displays the article to remove and aks to user for
+     * confirmation finally reports to user results
      */
     private void deleteArticle() {
         displayAllProducts();
@@ -206,12 +204,9 @@ public class Main {
         if (storeApp.existCode(sCode)) {
             out.println("Article to remove is: " + sCode);
             if (confirm("Are you sure? [True/False] ")) {
-                Product artDelete = storeApp.getArticle(sCode);
-                if (storeApp.delete(artDelete)) {
-                    out.println("Article successfully remove from store");
-                } else {
-                    out.println("Error on removing article");
-                }
+                Product artToDel = storeApp.findArticle(sCode);
+                String resultMsg = (storeApp.delete(artToDel) ? "Article successfully removed" : "Error on removing article");
+                out.println(resultMsg);
             } else {
                 out.println("Canceled by user");
             }
@@ -233,9 +228,9 @@ public class Main {
     }
 
     /**
-     * Displays all articles from a list given
+     * Displays all articles to user
      *
-     * @param store
+     * @param store the list to display
      */
     private void displayList(List<Product> store) {
         out.println("-----------------------------------------------------------------------------");
@@ -262,7 +257,8 @@ public class Main {
     }
 
     /**
-     * Displays a list of products which ones are under stock given by user
+     * Aks to user to input a quantity of stock, display a list of products wich
+     * ones are under quantity stock to user then reports results to user
      */
     private void SearchByUnderStock() {
         String sStock = inputString("Enter a stock: ");

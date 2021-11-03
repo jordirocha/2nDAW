@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * ADT class for a store list
  *
  * @author alro3749
  */
 public class StoreAppModel {
+// Attributes
 
     private List<Product> store;
+// Constructor
 
     public StoreAppModel() {
         store = new ArrayList<>();
         generateTestData();
     }
+// getters (accessors)
 
     public List<Product> getStore() {
         return store;
@@ -40,12 +44,12 @@ public class StoreAppModel {
     }
 
     /**
-     * Gets an article in the data source
+     * Return an article given code from data source
      *
      * @param sCode the code to find
-     * @return article if its found or null in case of error
+     * @return article found or null if not found or in case of error
      */
-    public Product getArticle(String sCode) {
+    public Product findArticle(String sCode) {
         if (existCode(sCode)) {
             Product temp = new Product(sCode);
             int index = store.indexOf(temp);
@@ -58,10 +62,10 @@ public class StoreAppModel {
     }
 
     /**
-     * Checks by code article if already exists
+     * Checks if the code given already exits in data source
      *
      * @param sCode the code of article
-     * @return true if contains the article or false
+     * @return true if already exits or false otherwise
      */
     public boolean existCode(String sCode) {
         Product temp = new Product(sCode);
@@ -83,11 +87,10 @@ public class StoreAppModel {
     }
 
     /**
-     * Adds an product to the list of store
+     * Adds a product given in data source
      *
-     * @param product article to add to source data
-     * @return true if its added correctly or false in case store contains
-     * product
+     * @param product article to add
+     * @return true if its correctly added or false otherwise
      */
     public boolean add(Product product) {
         if (!store.contains(product)) {
@@ -98,7 +101,7 @@ public class StoreAppModel {
     }
 
     /**
-     * Retrives all products of store
+     * Retuns all products of data source
      *
      * @return list of products
      */
@@ -107,11 +110,11 @@ public class StoreAppModel {
     }
 
     /**
-     * Updates the values of article old with the new article given
+     * Updates the values of the old article with the new article given
      *
-     * @param selected the selected article
-     * @param newValues the article with new values
-     * @return true if its succesfully updated or false in case of error
+     * @param selected the current selected article
+     * @param newValues the new article with new values
+     * @return true if its succesfully updated or false otherwise
      */
     public boolean update(Product oldProduct, Product newProduct) {
         if (store.contains(oldProduct)) {
@@ -129,21 +132,20 @@ public class StoreAppModel {
      * Removes the article given from data source
      *
      * @param artDelete the article to delete
-     * @return true if its succesfully removed or false in case of error
+     * @return true if its succesfully removed or false otherwise
      */
     public boolean delete(Product artDelete) {
         if (store.contains(artDelete)) {
             store.remove(artDelete);
             return true;
         }
-
         return false;
     }
 
     /**
      * Retrievs all products which their stock is under the stock given
      *
-     * @param stock the quantity the stock
+     * @param stock the stock quantity
      * @return list of products or empty in case of not found
      */
     public List<Product> getArticlesByUnderStock(int stock) {
