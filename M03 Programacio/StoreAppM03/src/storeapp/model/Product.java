@@ -3,7 +3,6 @@ package storeapp.model;
 import java.util.Objects;
 
 /**
- *
  * @author alro3749
  */
 public class Product {
@@ -82,20 +81,31 @@ public class Product {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+        if (this == null) {
             return false;
+        } else {
+            if (this == obj) {
+                return true;
+            } else {
+                if (obj instanceof Product) {
+                    final Product other = (Product) obj;
+                    if (!Objects.equals(this.code, other.code)) {
+                        return true;
+                    }
+                }
+            }
         }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Product other = (Product) obj;
-        if (!Objects.equals(this.code, other.code)) {
-            return false;
-        }
-        return true;
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        final Product other = (Product) obj;
+//        if (!Objects.equals(this.code, other.code)) {
+//            return false;
+//        }
+        return false;
     }
 
 }
