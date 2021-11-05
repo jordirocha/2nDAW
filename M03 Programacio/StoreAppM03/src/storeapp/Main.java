@@ -1,22 +1,23 @@
 package storeapp;
 
-import static java.lang.Integer.parseInt;
+import storeapp.model.Product;
+import storeapp.model.StoreAppModel;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import storeapp.model.Product;
-import storeapp.model.StoreAppModel;
+
+import static java.lang.Integer.parseInt;
 import static java.lang.System.out;
 
 /**
- *
  * @author alro3749
  */
 public class Main {
 
+    private final List<String> menu; // The menu of the application
     StoreAppModel storeApp; // The list of products
-    private List<String> menu; // The menu of the application
     private boolean exit; // Flag to exit
 
     public Main() {
@@ -33,39 +34,29 @@ public class Main {
     }
 
     /**
-     * To run aplication
+     * To run application
      */
     private void run() {
         storeApp = new StoreAppModel();
         generateMenu();
         do {
             int choice = displaySelector(menu);
-            out.println("");
+            out.println();
             switch (choice) {
-                case 0 ->
-                    exitApp();
-                case 1 ->
-                    displayAllProducts();
-                case 2 ->
-                    searchByCode();
-                case 3 ->
-                    addArticle();
-                case 4 ->
-                    modifyArticle();
-                case 5 ->
-                    deleteArticle();
-                case 6 ->
-                    SearchByUnderStock();
-//                case 7 ->
-//                    SearchByType();
+                case 0 -> exitApp();
+                case 1 -> displayAllProducts();
+                case 2 -> searchByCode();
+                case 3 -> addArticle();
+                case 4 -> modifyArticle();
+                case 5 -> deleteArticle();
+                case 6 -> SearchByUnderStock();
+                case 7 -> SearchByType();
                 default -> {
                     out.println("Not valid option");
                 }
             }
-            out.println("");
-
+            out.println();
         } while (!exit);
-
     }
 
     /**
@@ -102,10 +93,10 @@ public class Main {
     }
 
     /**
-     * Displays a list of options and user interacts given a option
+     * Displays a list of options and user interacts given an option
      *
-     * @param options list of Strings to print out
-     * @return a valid option if its correct -1 in case of exeception
+     * @param options list of options to print out
+     * @return a valid option if its correct or -1 in case of exception
      */
     private int displaySelector(List<String> options) {
         Scanner sc = new Scanner(System.in);
@@ -125,21 +116,22 @@ public class Main {
     /**
      * Asks the user to input the code of the article to be searched, searches
      * the article in the data, if its found will display all specs of the
-     * article
+     * article in case not found reports to user
      */
     private void searchByCode() {
         String sCode = inputString("Introduce code to search: ");
         Product art = storeApp.findArticle(sCode);
         if (art != null) {
-            out.println(art.toString());
+            out.println(art.getClass().getSimpleName());
+            out.println(art);
         } else {
             out.println("Article not found in our store");
         }
     }
 
     /**
-     * Aks the user to input the code, if code doesnt exits will continue with
-     * next values to add and then reposts resuts to user
+     * Aks the user to input the code, if code doesn't exit will continue with
+     * next values to add and then reposts results to user
      */
     private void addArticle() {
         String sCode = inputString("Enter a code: ");
@@ -162,25 +154,25 @@ public class Main {
     }
 
     /**
-     * Asks to user to input code to modify an article, verifies that the
+     * Asks user to input code to modify an article, verifies that the
      * article exists in data, then aks to user to input the other values to
      * add, before to add aks for confirmation and then reports results to user
      */
     private void modifyArticle() {
         displayAllProducts();
-        String scode = inputString("Enter code: ");
-        if (storeApp.existCode(scode)) {
+        String sCode = inputString("Enter code: ");
+        if (storeApp.existCode(sCode)) {
             String sNewCode = inputString("Enter new code: ");
             String sName = inputString("Enter new name: ");
             try {
                 String sPrice = inputString("Enter new price: ");
                 double newPrice = Double.parseDouble(sPrice);
                 String sStock = inputString("Enter new stock: ");
-                int newStock = parseInt(sStock);
+                int newStock = Integer.parseInt(sStock);
                 if (confirm("Are you sure you want to update it? [True|true/False|false] ")) {
-                    Product oldArt = storeApp.findArticle(scode);
+                    Product oldArt = storeApp.findArticle(sCode);
                     Product artToUpd = new Product(sNewCode, sName, newPrice, newStock);
-                    String resultMsg = (storeApp.update(oldArt, artToUpd) ? "Article successfuly updated" : "Error on updating article");
+                    String resultMsg = (storeApp.update(oldArt, artToUpd) ? "Article successfully updated" : "Error on updating article");
                     out.println(resultMsg);
                 } else {
                     out.println("Canceled by user");
@@ -194,7 +186,7 @@ public class Main {
     }
 
     /**
-     * Aks to user to input code to delete an article, verifies that the article
+     * Asks user to input code to delete an article, verifies that the article
      * exits in data, displays the article to remove and aks to user for
      * confirmation finally reports to user results
      */
@@ -245,7 +237,7 @@ public class Main {
     }
 
     /**
-     * Ask to user to confirma a operation
+     * Ask user to confirm an operation
      *
      * @param message the message to user
      * @return true to process false in case not
@@ -257,7 +249,7 @@ public class Main {
     }
 
     /**
-     * Aks to user to input a quantity of stock, display a list of products wich
+     * Aks to user to input a quantity of stock, display a list of products which
      * ones are under quantity stock to user then reports results to user
      */
     private void SearchByUnderStock() {
@@ -272,6 +264,20 @@ public class Main {
             }
         } catch (NumberFormatException nfe) {
             out.println("Error on parsing value");
+        }
+    }
+
+    /**
+     * Aks to user to input a type of article, display a list of products which
+     * ones are a type of, then reposts results to user
+     */
+    private void SearchByType() {
+        String sType = inputString("What you want to display Tv or Fridge? [T/F]: ");
+        List<Product> products = storeApp.displayByType(sType);
+        if (products != null) {
+            displayList(products);
+        } else {
+            out.println("Type of product not found");
         }
     }
 
