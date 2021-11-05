@@ -61,11 +61,11 @@ public class Main {
      */
     private void generateMenu() {
         menu.add("Exit");
-        menu.add("List all products ▤");
-        menu.add("Search article by code ⌕");
-        menu.add("Add article ＋");
-        menu.add("Update article ✎");
-        menu.add("Delete article ✖");
+        menu.add("List all products");
+        menu.add("Search article by code");
+        menu.add("Add article");
+        menu.add("Update article");
+        menu.add("Delete article");
         menu.add("Search articles that are under stock quantity");
         menu.add("Search articles by type (Tv o Fridge)");
     }

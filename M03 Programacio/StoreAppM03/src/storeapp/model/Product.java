@@ -89,22 +89,12 @@ public class Product {
             } else {
                 if (obj instanceof Product) {
                     final Product other = (Product) obj;
-                    if (!Objects.equals(this.code, other.code)) {
+                    if (Objects.equals(this.code, other.code)) {
                         return true;
                     }
                 }
             }
         }
-//        if (obj == null) {
-//            return false;
-//        }
-//        if (getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        final Product other = (Product) obj;
-//        if (!Objects.equals(this.code, other.code)) {
-//            return false;
-//        }
         return false;
     }
 
