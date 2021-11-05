@@ -112,8 +112,8 @@ public class StoreAppModel {
     /**
      * Updates the values of the old article with the new article given
      *
-     * @param selected the current selected article
-     * @param newValues the new article with new values
+     * @param oldProduct the current selected article
+     * @param newProduct the new article with new values
      * @return true if its succesfully updated or false otherwise
      */
     public boolean update(Product oldProduct, Product newProduct) {
