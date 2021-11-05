@@ -75,11 +75,8 @@ public class Main {
      */
     private void displayAllProducts() {
         List<Product> allProducts = storeApp.getAllProducts();
-        if (allProducts != null) {
-            displayList(allProducts);
-        } else {
-            out.println("No data to display");
-        }
+        if (allProducts != null) displayList(allProducts);
+        else out.println("No data to display");
     }
 
     /**
@@ -97,9 +94,7 @@ public class Main {
      */
     private int displaySelector(List<String> options) {
         Scanner sc = new Scanner(System.in);
-        for (int i = 0; i < options.size(); i++) {
-            out.format("%d. %s\n", i, options.get(i));
-        }
+        for (int i = 0; i < options.size(); i++) out.format("%d. %s\n", i, options.get(i));
         out.print("Enter your option: ");
         int option;
         try {
@@ -118,11 +113,8 @@ public class Main {
     private void searchByCode() {
         String sCode = inputString("Introduce code to search: ");
         Product art = storeApp.findArticle(sCode);
-        if (art != null) {
-            out.println(art);
-        } else {
-            out.println("Article not found in our store");
-        }
+        if (art != null) out.println(art);
+        else out.println("Article not found in our store");
     }
 
     /**
@@ -257,11 +249,8 @@ public class Main {
         try {
             int stock = parseInt(sStock);
             List<Product> products = storeApp.getArticlesByUnderStock(stock);
-            if (products.size() > 0) {
-                displayList(products);
-            } else {
-                out.println("No products under quantity stock given");
-            }
+            if (products.size() > 0) displayList(products);
+            else out.println("No products under quantity stock given");
         } catch (NumberFormatException nfe) {
             out.println("Error on parsing value");
         }
@@ -275,11 +264,8 @@ public class Main {
         String sType = inputString("What you want to display Tv or Fridge? [T|t/F|f]: ");
         if (sType.equalsIgnoreCase("T") || sType.equalsIgnoreCase("F")) {
             List<Product> products = storeApp.displayByType(sType.toUpperCase());
-            if (products.size() > 0) {
-                displayList(products);
-            } else {
-                out.println("There aren't articles of this type");
-            }
+            if (products.size() > 0) displayList(products);
+            else out.println("There aren't articles of this type");
         } else {
             out.println("Incorrect type of article");
         }

@@ -49,6 +49,7 @@ public class StoreAppModel {
             for (Product art : store) {
                 if (art.getCode().equals(sCode)) {
                     temp = art;
+                    break;
                 }
             }
         }
@@ -62,11 +63,7 @@ public class StoreAppModel {
      * @return true if already exits or false otherwise
      */
     public boolean existCode(String sCode) {
-        for (Product art : store) {
-            if (art.getCode().equals(sCode)) {
-                return true;
-            }
-        }
+        for (Product art : store) if (art.getCode().equals(sCode)) return true;
         return false;
     }
 
@@ -79,11 +76,8 @@ public class StoreAppModel {
     public List<Product> displayByType(String type) {
         List<Product> products = new ArrayList<>();
         for (Product art : store) {
-            if (type.equals("F") && art instanceof Fridge) {
-                products.add(art);
-            } else if (type.equals("T") && art instanceof Tv) {
-                products.add(art);
-            }
+            if (type.equals("F") && art instanceof Fridge) products.add(art);
+            else if (type.equals("T") && art instanceof Tv) products.add(art);
         }
         return products;
     }
@@ -103,7 +97,7 @@ public class StoreAppModel {
     }
 
     /**
-     * Retuns all products of data source
+     * Returns all products of data source
      *
      * @return list of products
      */
@@ -153,9 +147,7 @@ public class StoreAppModel {
     public List<Product> getArticlesByUnderStock(int stock) {
         List<Product> products = new ArrayList<>();
         for (Product product : store) {
-            if (product.getStock() < stock) {
-                products.add(product);
-            }
+            if (product.getStock() < stock) products.add(product);
         }
         return products;
     }
