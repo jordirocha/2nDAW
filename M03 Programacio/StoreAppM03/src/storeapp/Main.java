@@ -1,12 +1,11 @@
 package storeapp;
 
+import storeapp.model.Fridge;
 import storeapp.model.Product;
 import storeapp.model.StoreAppModel;
+import storeapp.model.Tv;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.System.out;
@@ -41,7 +40,7 @@ public class Main {
         generateMenu();
         do {
             int choice = displaySelector(menu);
-            out.println();
+            out.println("\n");
             switch (choice) {
                 case 0 -> exitApp();
                 case 1 -> displayAllProducts();
@@ -51,9 +50,7 @@ public class Main {
                 case 5 -> deleteArticle();
                 case 6 -> SearchByUnderStock();
                 case 7 -> SearchByType();
-                default -> {
-                    out.println("Not valid option");
-                }
+                default -> out.println("Not valid option");
             }
             out.println();
         } while (!exit);
@@ -64,17 +61,17 @@ public class Main {
      */
     private void generateMenu() {
         menu.add("Exit");
-        menu.add("Llistar tots els productes");
-        menu.add("Cercar producte per codi");
-        menu.add("Afegir producte");
-        menu.add("Modificar producte");
-        menu.add("Eliminar producte");
-        menu.add("Cercar productes amb un stock per sota d'un valor");
-        menu.add("Cercar productes per tipus (Tv o Fridge)");
+        menu.add("List all products ▤");
+        menu.add("Search article by code ⌕");
+        menu.add("Add article ＋");
+        menu.add("Update article ✎");
+        menu.add("Delete article ✖");
+        menu.add("Search articles that are under stock quantity");
+        menu.add("Search articles by type (Tv o Fridge)");
     }
 
     /**
-     * Display all products from data source
+     * Display all products to user
      */
     private void displayAllProducts() {
         List<Product> allProducts = storeApp.getAllProducts();
@@ -122,7 +119,6 @@ public class Main {
         String sCode = inputString("Introduce code to search: ");
         Product art = storeApp.findArticle(sCode);
         if (art != null) {
-            out.println(art.getClass().getSimpleName());
             out.println(art);
         } else {
             out.println("Article not found in our store");
@@ -154,9 +150,9 @@ public class Main {
     }
 
     /**
-     * Asks user to input code to modify an article, verifies that the
-     * article exists in data, then aks to user to input the other values to
-     * add, before to add aks for confirmation and then reports results to user
+     * Asks user to input code to modify an article, verifies that the article
+     * exists in data, then aks to user to input the other values to add, before
+     * to add aks for confirmation and then reports results to user
      */
     private void modifyArticle() {
         displayAllProducts();
@@ -211,7 +207,7 @@ public class Main {
      * Prompts an answer to the user and read a text from user
      *
      * @param question the question for the user
-     * @return the uesr answer
+     * @return a question
      */
     private String inputString(String question) {
         Scanner sc = new Scanner(System.in);
@@ -225,15 +221,19 @@ public class Main {
      * @param store the list to display
      */
     private void displayList(List<Product> store) {
-        out.println("-----------------------------------------------------------------------------");
-        out.printf("%5s %25s %20s %15s", "ART. ID", "NAME", "PRICE", "STOCK");
+        out.println("------------------------------------------------------------------------------------------------------------------------");
+        out.printf("%5s %25s %20s %15s %15s %15s %15s", "ART. ID", "NAME", "PRICE", "STOCK", "INCHES", "CAPACITY", "NO FROST");
         out.println();
-        out.println("-----------------------------------------------------------------------------");
+        out.println("------------------------------------------------------------------------------------------------------------------------");
         for (Product art : store) {
-            out.format("%5s %25s %20s %15d", art.getCode(), art.getName(), art.getPrice(), art.getStock());
+            if (art instanceof Tv) {
+                out.format("%5s %25s %20s %15d %15s %15s %15s", art.getCode(), art.getName(), art.getPrice(), art.getStock(), ((Tv) art).getInches(), "NULL", "NULL");
+            } else {
+                out.format("%5s %25s %20s %15d %15s %15s %15s", art.getCode(), art.getName(), art.getPrice(), art.getStock(), "NULL", ((Fridge) art).getCapacity(), ((Fridge) art).isNoFrost());
+            }
             out.println();
         }
-        out.format("\nNumber of elements: %d\n", store.size());
+        out.format("\nNumber of articles: %d\n", store.size());
     }
 
     /**
@@ -249,8 +249,8 @@ public class Main {
     }
 
     /**
-     * Aks to user to input a quantity of stock, display a list of products which
-     * ones are under quantity stock to user then reports results to user
+     * Aks to user to input a quantity of stock, display a list of products
+     * which ones are under quantity stock to user then reports results to user
      */
     private void SearchByUnderStock() {
         String sStock = inputString("Enter a stock: ");
@@ -260,7 +260,7 @@ public class Main {
             if (products.size() > 0) {
                 displayList(products);
             } else {
-                out.println("No products under stock given");
+                out.println("No products under quantity stock given");
             }
         } catch (NumberFormatException nfe) {
             out.println("Error on parsing value");
@@ -272,12 +272,16 @@ public class Main {
      * ones are a type of, then reposts results to user
      */
     private void SearchByType() {
-        String sType = inputString("What you want to display Tv or Fridge? [T/F]: ");
-        List<Product> products = storeApp.displayByType(sType);
-        if (products != null) {
-            displayList(products);
+        String sType = inputString("What you want to display Tv or Fridge? [T|t/F|f]: ");
+        if (sType.equalsIgnoreCase("T") || sType.equalsIgnoreCase("F")) {
+            List<Product> products = storeApp.displayByType(sType.toUpperCase());
+            if (products.size() > 0) {
+                displayList(products);
+            } else {
+                out.println("There aren't articles of this type");
+            }
         } else {
-            out.println("Type of product not found");
+            out.println("Incorrect type of article");
         }
     }
 
