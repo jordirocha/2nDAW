@@ -40,7 +40,7 @@ public class Main {
         generateMenu();
         do {
             int choice = displaySelector(menu);
-            out.println("\n");
+            out.println("");
             switch (choice) {
                 case 0 -> exitApp();
                 case 1 -> displayAllProducts();
