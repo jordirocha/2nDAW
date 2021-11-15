@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/2nDAW.iml" filepath="$PROJECT_DIR$/.idea/2nDAW.iml" />
+      <module fileurl="file://$PROJECT_DIR$/M03 Programacio/FaunaApp/FaunaApp.iml" filepath="$PROJECT_DIR$/M03 Programacio/FaunaApp/FaunaApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/M03 Programacio/ShoppingList/ShoppingList.iml" filepath="$PROJECT_DIR$/M03 Programacio/ShoppingList/ShoppingList.iml" />
+      <module fileurl="file://$PROJECT_DIR$/M03 Programacio/StoreAppM03/StoreAppM03.iml" filepath="$PROJECT_DIR$/M03 Programacio/StoreAppM03/StoreAppM03.iml" />
+    </modules>
+  </component>
+</project>
