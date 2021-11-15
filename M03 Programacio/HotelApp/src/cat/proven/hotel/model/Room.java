@@ -1,4 +1,4 @@
-package cat.proven;
+package cat.proven.hotel.model;
 
 import java.util.Objects;
 
@@ -10,7 +10,11 @@ public class Room {
     double price;
     Category category;
 
-    public Room( int number,int capacity, double price, Category category) {
+    public Room(int number) {
+        this.number = number;
+    }
+
+    public Room(int number, int capacity, double price, Category category) {
         this.capacity = capacity;
         this.price = price;
         this.number = number;

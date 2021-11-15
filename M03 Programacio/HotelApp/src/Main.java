@@ -1,7 +1,7 @@
-import cat.proven.Category;
-import cat.proven.Customer;
-import cat.proven.Hotel;
-import cat.proven.Room;
+import cat.proven.hotel.model.Category;
+import cat.proven.hotel.model.Customer;
+import cat.proven.hotel.model.Hotel;
+import cat.proven.hotel.model.Room;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -38,8 +38,8 @@ public class Main {
                 case 2 -> displayCustomersHotel();
                 case 3 -> displayCustomersRoom();
                 case 4 -> registerRoom();
-//                case 5 -> deleteArticle();
-//                case 6 -> SearchByUnderStock();
+                case 5 -> deleteRoom();
+                case 6 -> modifyRoom();
 //                case 7 -> SearchByType();
                 default -> System.out.println("Not valid option");
             }
@@ -47,23 +47,86 @@ public class Main {
         } while (!exit);
     }
 
-    private void registerRoom() {
-        String sNumber = inputString("Enter number of room: ");
-        int number = Integer.parseInt(sNumber);
-        String sCapacity = inputString("Enter capacity: ");
-        int capacity = Integer.parseInt(sCapacity);
-        String sType = inputString("Enter category [standard|superior|suite]: ");
-        Category category = getCategory(sType);
-        String sPrice = inputString("Enter price: ");
-        double price = Double.parseDouble(sPrice);
-        Room nRoom = new Room(number, capacity, price, category);
-        if (hotelApp.addRoom(nRoom)) {
-            System.out.println("Room successfully registered");
-        } else {
-            System.out.println("Failure on register room");
+    /**
+     * Aks to user to input the code of the room, verifies if room exists continues
+     * asking the other values, then reports to user
+     */
+    private void modifyRoom() {
+        try {
+            String sCode = inputString("Enter the code room: ");
+            int code = Integer.parseInt(sCode);
+            if (hotelApp.findRoom(new Room(code)) != null) {
+                Room oldRoom = hotelApp.findRoom(new Room(code));
+                Room upRoom = inputRoom();
+                int result = hotelApp.modifyRoom(upRoom, oldRoom);
+                System.out.println((result == 0 ? "Successfully modified" : "Error modifying room"));
+            } else {
+                System.out.println("No room found by code given");
+            }
+        } catch (NumberFormatException nfe) {
+            System.out.println("Error on parsing values");
         }
     }
 
+    /**
+     * Aks the user to input the code of room
+     */
+    private void deleteRoom() {
+        try {
+            String sCode = inputString("Enter the code room: ");
+            int code = Integer.parseInt(sCode);
+            int result = hotelApp.deleteRoom(new Room(code));
+            System.out.println((result == 0 ? "Successfully deleted" : "Error on deleting room"));
+        } catch (NumberFormatException nfe) {
+            System.out.println("Error on parsing values");
+        }
+    }
+
+    /**
+     * Asks the user to input all values of a room, finally reports to user
+     */
+    private void registerRoom() {
+        Room r = inputRoom();
+        if (r != null) {
+            if (hotelApp.addRoom(r) != -1) {
+                System.out.println("Room successfully registered");
+            } else {
+                System.out.println("Failure on register room");
+            }
+        } else {
+            System.out.println("Error getting room");
+        }
+
+    }
+
+    /**
+     * Asks user to input all values from a room
+     *
+     * @return an entity room with values
+     */
+    private Room inputRoom() {
+        try {
+            String sNumber = inputString("Enter number of room: ");
+            int number = Integer.parseInt(sNumber);
+            String sCapacity = inputString("Enter capacity: ");
+            int capacity = Integer.parseInt(sCapacity);
+            String sType = inputString("Enter category [standard|superior|suite]: ");
+            Category category = getCategory(sType);
+            String sPrice = inputString("Enter price: ");
+            double price = Double.parseDouble(sPrice);
+            return new Room(number, capacity, price, category);
+        } catch (NumberFormatException nfe) {
+            System.out.println("Error on parsing values");
+            return null;
+        }
+    }
+
+    /**
+     * Obtains a category in enum format
+     *
+     * @param sType the type of category
+     * @return By default, STANDARD otherwise the others enums
+     */
     private Category getCategory(String sType) {
         if (sType.equalsIgnoreCase("suite")) {
             return Category.SUITE;
@@ -71,17 +134,18 @@ public class Main {
         if (sType.equalsIgnoreCase("superior")) {
             return Category.SUPERIOR;
         }
-        if (sType.equalsIgnoreCase("standard")) {
-            return Category.STANDARD;
-        }
         return Category.STANDARD;
     }
 
+    /**
+     * Asks the user a room to display all customers hosted in that room, finally reports to user
+     */
     private void displayCustomersRoom() {
         try {
             String sRoom = inputString("Enter number room: ");
             int room = Integer.parseInt(sRoom);
-            List<Customer> customers = hotelApp.getCustomersByCode(room);
+            Room r = new Room(room);
+            List<Customer> customers = hotelApp.findCustomersInRoom(r);
             if (!customers.isEmpty()) {
                 customers.forEach(e -> System.out.println(e.toString()));
             } else {
@@ -92,8 +156,11 @@ public class Main {
         }
     }
 
+    /**
+     * Displays all customers hosted in hotel, finally reports to user
+     */
     private void displayCustomersHotel() {
-        List<Customer> clients = hotelApp.getCustomers();
+        List<Customer> clients = hotelApp.getOccupiedRooms();
         if (!clients.isEmpty()) {
             clients.forEach(e -> System.out.println(e.toString()));
         } else {
@@ -101,12 +168,15 @@ public class Main {
         }
     }
 
+    /**
+     * Displays to user all rooms from hotel, then reports to user
+     */
     private void displayAllRooms() {
         List<Room> rooms = hotelApp.getRooms();
         if (!rooms.isEmpty()) {
             displayList(rooms);
         } else {
-            System.out.println("No rooms in hotel");
+            System.out.println("No rooms to display");
         }
     }
 

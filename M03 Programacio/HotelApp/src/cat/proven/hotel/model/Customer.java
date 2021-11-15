@@ -1,4 +1,4 @@
-package cat.proven;
+package cat.proven.hotel.model;
 
 public class Customer {
     private String NIF;
