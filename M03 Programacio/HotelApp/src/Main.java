@@ -40,11 +40,23 @@ public class Main {
                 case 4 -> registerRoom();
                 case 5 -> deleteRoom();
                 case 6 -> modifyRoom();
-//                case 7 -> SearchByType();
+                case 7 -> checkIn();
+                //                case 7 -> SearchByType();
+                //                case 7 -> SearchByType();
+
                 default -> System.out.println("Not valid option");
             }
             System.out.println();
         } while (!exit);
+    }
+
+    private void checkIn() {
+        String sCustomers = inputString("How many people are you?: ");
+        int customers = Integer.parseInt(sCustomers);
+        List<Room> possibleRooms = hotelApp.getRoomsByCapacity(customers);
+        if (!possibleRooms.isEmpty()) {
+            possibleRooms.forEach(r -> System.out.println(r.toString()));
+        }
     }
 
     /**

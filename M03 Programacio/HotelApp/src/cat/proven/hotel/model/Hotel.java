@@ -119,6 +119,10 @@ public class Hotel {
     public int modifyRoom(Room newR, Room oldR) {
         if (hotel.containsKey(oldR)) {
             List<Customer> currentCustomers = findCustomersInRoom(oldR);
+            if (newR.number == oldR.number){
+                hotel.put(newR, currentCustomers);
+            }
+            hotel.remove(oldR);
             hotel.put(newR, currentCustomers);
             return 0;
         }
@@ -159,4 +163,13 @@ public class Hotel {
         return null;
     }
 
+    public List<Room> getRoomsByCapacity(int customers) {
+        List<Room> rooms = new ArrayList<>();
+        if (!hotel.isEmpty()) {
+            hotel.forEach((k, v) -> {
+                if (k.capacity >= customers) rooms.add(k);
+            } );
+        }
+        return rooms;
+    }
 }
