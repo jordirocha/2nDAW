@@ -24,9 +24,6 @@ public class Hotel {
         customersRoom2.add(new Customer("967892", "Belen"));
 
         List<Customer> customersRoom3 = new ArrayList<>();
-        customersRoom1.add(new Customer("343444", "Daniel"));
-        customersRoom1.add(new Customer("475875", "Mercè"));
-        customersRoom1.add(new Customer("234532", "Miquel"));
 
         hotel.put(room1, customersRoom1);
         hotel.put(new Room(2, 5, 180, Category.SUPERIOR), customersRoom1);
@@ -119,7 +116,7 @@ public class Hotel {
     public int modifyRoom(Room newR, Room oldR) {
         if (hotel.containsKey(oldR)) {
             List<Customer> currentCustomers = findCustomersInRoom(oldR);
-            if (newR.number == oldR.number){
+            if (newR.number == oldR.number) {
                 hotel.put(newR, currentCustomers);
             }
             hotel.remove(oldR);
@@ -137,16 +134,29 @@ public class Hotel {
      * @return 0 in case successfully checked out -1 otherwise
      */
     public int checkInCustomers(Room r, List<Customer> customers) {
+        if (hotel.containsKey(r)) {
+            hotel.replace(r, customers);
+            return 0;
+        }
         return -1;
     }
 
     /**
-     * Check out a room
+     * Check out a room from data source
      *
      * @param r the room to check out
      * @return 0 in case successfully checked out -1 otherwise
      */
     public int checkOutCustomers(Room r) {
+        if (hotel.containsKey(r)) {
+            List<Customer> currentCustomer  = hotel.get(r);
+            if (!currentCustomer.isEmpty()) {
+                //System.out.println(currentCustomer.size());
+                List<Customer> empty = new ArrayList<>();
+                hotel.put(r, empty);
+                return 0;
+            }
+        }
         return -1;
     }
 
@@ -163,12 +173,14 @@ public class Hotel {
         return null;
     }
 
-    public List<Room> getRoomsByCapacity(int customers) {
+    public List<Room> getRoomsToCustomers(int customers, Category category) {
         List<Room> rooms = new ArrayList<>();
-        if (!hotel.isEmpty()) {
-            hotel.forEach((k, v) -> {
-                if (k.capacity >= customers) rooms.add(k);
-            } );
+        if (customers > 0) {
+            if (!hotel.isEmpty()) {
+                hotel.forEach((k, v) -> {
+                    if (k.capacity >= customers && k.category == category && v.isEmpty()) rooms.add(k);
+                });
+            }
         }
         return rooms;
     }

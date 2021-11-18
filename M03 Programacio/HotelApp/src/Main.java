@@ -3,10 +3,7 @@ import cat.proven.hotel.model.Customer;
 import cat.proven.hotel.model.Hotel;
 import cat.proven.hotel.model.Room;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private Hotel hotelApp;
@@ -41,21 +38,78 @@ public class Main {
                 case 5 -> deleteRoom();
                 case 6 -> modifyRoom();
                 case 7 -> checkIn();
-                //                case 7 -> SearchByType();
-                //                case 7 -> SearchByType();
-
+                case 8 -> checkOut();
                 default -> System.out.println("Not valid option");
             }
             System.out.println();
         } while (!exit);
     }
 
+    /**
+     * Displays to user all rooms, the user input a room to check out, then reports to user
+     */
+    private void checkOut() {
+        List<Room> rooms = hotelApp.getRooms();
+        int choice = displaySelectorRoom(rooms);
+        if (choice >= 0 && choice <= rooms.size()) {
+            Room roomSelected = rooms.get(choice);
+            if (hotelApp.checkOutCustomers(roomSelected) != -1) {
+                System.out.println("Room successfully checked out");
+            } else {
+                System.out.println("Error on checking out room");
+            }
+        } else {
+            System.out.println("Invalid room");
+        }
+    }
+
+    /**
+     * Asks the user to input the category and the quantity of people which ones will be hosted in hotel,
+     * then display a list of possible rooms that contains that requirements,
+     */
     private void checkIn() {
-        String sCustomers = inputString("How many people are you?: ");
+        List<Customer> newCustomers = new ArrayList<>();
+        String sCategory = inputString("Enter a category [standard|superior|suite]: ");
+        Category category = getCategory(sCategory);
+
+        String sCustomers = inputString("How many people are? ");
         int customers = Integer.parseInt(sCustomers);
-        List<Room> possibleRooms = hotelApp.getRoomsByCapacity(customers);
+
+        List<Room> possibleRooms = hotelApp.getRoomsToCustomers(customers, category);
+
         if (!possibleRooms.isEmpty()) {
-            possibleRooms.forEach(r -> System.out.println(r.toString()));
+            int choice = displaySelectorRoom(possibleRooms);
+            if (choice >= 0 && choice < possibleRooms.size()) {
+                Room roomSelected = possibleRooms.get(choice);
+                for (int i = 0; i < customers; i++) {
+                    System.out.println("REGISTERING CUSTOMER " + i + 1 + ":");
+                    Customer newCustomer = inputCustomer();
+                    newCustomers.add(newCustomer);
+                }
+                if (hotelApp.checkInCustomers(roomSelected, newCustomers) != -1)
+                    System.out.println("Customer successfully registered");
+                else System.out.println("Error on registering customers");
+            } else {
+                System.out.println("Incorrect choice of room");
+            }
+        } else {
+            System.out.println("No rooms found, sorry");
+        }
+    }
+
+    /**
+     * Asks user to input all values from a customer
+     *
+     * @return an entity room with values
+     */
+    private Customer inputCustomer() {
+        try {
+            String sNIF = inputString("Enter NIF: ");
+            String sName = inputString("Enter name: ");
+            return new Customer(sNIF, sName);
+        } catch (NumberFormatException nfe) {
+            System.out.println("Error on parsing values");
+            return null;
         }
     }
 
@@ -219,19 +273,38 @@ public class Main {
     }
 
     /**
+     * Displays a list of options and user interacts given an option
+     *
+     * @param list list of options to print out
+     * @return a valid option if its correct or -1 in case of exception
+     */
+    private int displaySelectorRoom(List<Room> list) {
+        Scanner sc = new Scanner(System.in);
+        for (int i = 0; i < list.size(); i++) System.out.format("%d. %s\n", i, list.get(i));
+        System.out.print("Enter your option: ");
+        int option;
+        try {
+            option = sc.nextInt();
+        } catch (InputMismatchException ime) {
+            option = -1;
+        }
+        return option;
+    }
+
+    /**
      * Creates the menu for the user interaction
      */
     private void generateMenu() {
         menu.add("Exit");
-        menu.add("Display all rooms");
-        menu.add("Display all customers from hotel");
-        menu.add("Display all clients by room");
-        menu.add("Register room");
-        menu.add("Delete room");
-        menu.add("Modify room");
+        menu.add("Display all rooms \uD83D\uDEAA");
+        menu.add("Display all customers from hotel \uD83C\uDFE8");
+        menu.add("Display all clients by room \uD83D\uDC68");
+        menu.add("Register room ➕");
+        menu.add("Delete room ❌");
+        menu.add("Modify room ✏️ ");
         menu.add("Check-in customers to room");
         menu.add("Check-out customers from room");
-        menu.add("Percentage of used room");
+        //menu.add("Percentage of used room");
     }
 
     /**
@@ -256,4 +329,20 @@ public class Main {
         return sc.nextLine();
     }
 
+    /**
+     * Ask user to confirm an operation
+     *
+     * @param message the message to user
+     * @return true to process false in case not
+     */
+    private boolean confirm(String message) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            System.out.println(message);
+            return sc.nextBoolean();
+        } catch (InputMismatchException ime) {
+            System.out.println("Error on reading confirmation");
+            return false;
+        }
+    }
 }
