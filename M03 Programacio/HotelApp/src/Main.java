@@ -82,7 +82,7 @@ public class Main {
             if (choice >= 0 && choice < possibleRooms.size()) {
                 Room roomSelected = possibleRooms.get(choice);
                 for (int i = 0; i < customers; i++) {
-                    System.out.println("REGISTERING CUSTOMER " + i + 1 + ":");
+                    System.out.println("REGISTERING CUSTOMER " + (i + 1) + ":");
                     Customer newCustomer = inputCustomer();
                     newCustomers.add(newCustomer);
                 }
@@ -194,12 +194,8 @@ public class Main {
      * @return By default, STANDARD otherwise the others enums
      */
     private Category getCategory(String sType) {
-        if (sType.equalsIgnoreCase("suite")) {
-            return Category.SUITE;
-        }
-        if (sType.equalsIgnoreCase("superior")) {
-            return Category.SUPERIOR;
-        }
+        if (sType.equalsIgnoreCase("suite")) return Category.SUITE;
+        if (sType.equalsIgnoreCase("superior")) return Category.SUPERIOR;
         return Category.STANDARD;
     }
 
@@ -210,12 +206,11 @@ public class Main {
         try {
             String sRoom = inputString("Enter number room: ");
             int room = Integer.parseInt(sRoom);
-            Room r = new Room(room);
-            List<Customer> customers = hotelApp.findCustomersInRoom(r);
+            List<Customer> customers = hotelApp.findCustomersInRoom(new Room(room));
             if (!customers.isEmpty()) {
                 customers.forEach(e -> System.out.println(e.toString()));
             } else {
-                System.out.println("No customer in this room");
+                System.out.println("No customers hosted in this room");
             }
         } catch (NumberFormatException nfe) {
             System.out.println("Error on parsing values");
@@ -296,12 +291,12 @@ public class Main {
      */
     private void generateMenu() {
         menu.add("Exit");
-        menu.add("Display all rooms \uD83D\uDEAA");
-        menu.add("Display all customers from hotel \uD83C\uDFE8");
-        menu.add("Display all clients by room \uD83D\uDC68");
-        menu.add("Register room ➕");
-        menu.add("Delete room ❌");
-        menu.add("Modify room ✏️ ");
+        menu.add("Display all rooms");
+        menu.add("Display all customers from hotel");
+        menu.add("Display all clients by room");
+        menu.add("Register room");
+        menu.add("Delete room");
+        menu.add("Modify room");
         menu.add("Check-in customers to room");
         menu.add("Check-out customers from room");
         //menu.add("Percentage of used room");

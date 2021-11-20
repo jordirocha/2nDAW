@@ -2,7 +2,19 @@ package cat.proven.hotel.model;
 
 public class Customer {
     private String NIF;
-private String name;
+    private String name;
+
+    public Customer() {
+    }
+
+    public Customer(String NIF) {
+        this.NIF = NIF;
+    }
+
+    public Customer(Customer other) {
+        this.NIF = other.NIF;
+        this.name = other.name;
+    }
 
     public Customer(String NIF, String name) {
         this.NIF = NIF;
