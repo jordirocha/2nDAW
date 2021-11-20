@@ -32,8 +32,8 @@ public class Main {
             switch (choice) {
                 case 0 -> exitApp();
                 case 1 -> displayAllRooms();
-                case 2 -> displayCustomersHotel();
-                case 3 -> displayCustomersRoom();
+                case 2 -> displayAllCustomersHotel();
+                case 3 -> displayCustomersInRoom();
                 case 4 -> registerRoom();
                 case 5 -> deleteRoom();
                 case 6 -> modifyRoom();
@@ -46,18 +46,15 @@ public class Main {
     }
 
     /**
-     * Displays to user all rooms, the user input a room to check out, then reports to user
+     * Displays a list of rooms, asks the user to input a room then process to check out the room selected and then reports to the user
      */
     private void checkOut() {
         List<Room> rooms = hotelApp.getRooms();
         int choice = displaySelectorRoom(rooms);
         if (choice >= 0 && choice <= rooms.size()) {
             Room roomSelected = rooms.get(choice);
-            if (hotelApp.checkOutCustomers(roomSelected) != -1) {
-                System.out.println("Room successfully checked out");
-            } else {
-                System.out.println("Error on checking out room");
-            }
+            if (hotelApp.checkOutCustomers(roomSelected) != -1) System.out.println("Room successfully checked out");
+            else System.out.println("Error on checking out room");
         } else {
             System.out.println("Invalid room");
         }
@@ -65,14 +62,16 @@ public class Main {
 
     /**
      * Asks the user to input the category and the quantity of people which ones will be hosted in hotel,
-     * then display a list of possible rooms that contains that requirements,
+     * then display a list of possible rooms that contains what user puts if there aren't reports the failure.
+     * When there are user must select on room and then will ask for the information to introduce abut customers once is finished reports to user if the check in is ok or not
      */
     private void checkIn() {
         List<Customer> newCustomers = new ArrayList<>();
+
         String sCategory = inputString("Enter a category [standard|superior|suite]: ");
         Category category = getCategory(sCategory);
 
-        String sCustomers = inputString("How many people are? ");
+        String sCustomers = inputString("How many people will be hosted? ");
         int customers = Integer.parseInt(sCustomers);
 
         List<Room> possibleRooms = hotelApp.getRoomsToCustomers(customers, category);
@@ -86,14 +85,13 @@ public class Main {
                     Customer newCustomer = inputCustomer();
                     newCustomers.add(newCustomer);
                 }
-                if (hotelApp.checkInCustomers(roomSelected, newCustomers) != -1)
-                    System.out.println("Customer successfully registered");
+                if (hotelApp.checkInCustomers(roomSelected, newCustomers) != -1) System.out.println("Customer successfully registered");
                 else System.out.println("Error on registering customers");
             } else {
                 System.out.println("Incorrect choice of room");
             }
         } else {
-            System.out.println("No rooms found, sorry");
+            System.out.println("No rooms found with what you want");
         }
     }
 
@@ -114,8 +112,9 @@ public class Main {
     }
 
     /**
-     * Aks to user to input the code of the room, verifies if room exists continues
-     * asking the other values, then reports to user
+     * Aks to user to input the code of the room to be modified, verifies if room exists continues
+     * asking the other values if not reports the failure. When exists it process to ask the user for confirmation to modify, in case to cancel reports the user
+     * In case to process it reports to the user the results
      */
     private void modifyRoom() {
         try {
@@ -124,8 +123,12 @@ public class Main {
             if (hotelApp.findRoom(new Room(code)) != null) {
                 Room oldRoom = hotelApp.findRoom(new Room(code));
                 Room upRoom = inputRoom();
-                int result = hotelApp.modifyRoom(upRoom, oldRoom);
-                System.out.println((result == 0 ? "Successfully modified" : "Error modifying room"));
+                if (confirm("Are you sure you want to delete it? [True|true/False|false] ")) {
+                    int result = hotelApp.modifyRoom(upRoom, oldRoom);
+                    System.out.println((result == 0 ? "Successfully modified" : "Error modifying room"));
+                } else {
+                    System.out.println("Canceled by user");
+                }
             } else {
                 System.out.println("No room found by code given");
             }
@@ -135,30 +138,32 @@ public class Main {
     }
 
     /**
-     * Aks the user to input the code of room
+     * Asks user to input code of the room to delete a room, once introduced it asks for confirmation to do the operation in case the user process to cancel reports the user.
+     * In case to delete reports to the user the result
      */
     private void deleteRoom() {
         try {
             String sCode = inputString("Enter the code room: ");
             int code = Integer.parseInt(sCode);
-            int result = hotelApp.deleteRoom(new Room(code));
-            System.out.println((result == 0 ? "Successfully deleted" : "Error on deleting room"));
+            if (confirm("Are you sure you want to delete it? [True|true/False|false] ")) {
+                int result = hotelApp.deleteRoom(new Room(code));
+                System.out.println((result == 0 ? "Successfully deleted" : "Error on deleting room"));
+            } else {
+                System.out.println("Canceled by user");
+            }
         } catch (NumberFormatException nfe) {
             System.out.println("Error on parsing values");
         }
     }
 
     /**
-     * Asks the user to input all values of a room, finally reports to user
+     * Asks the user to input all values of a room, if the room obtained not exists will be registered, if already exists reports to the user the failure
      */
     private void registerRoom() {
         Room r = inputRoom();
         if (r != null) {
-            if (hotelApp.addRoom(r) != -1) {
-                System.out.println("Room successfully registered");
-            } else {
-                System.out.println("Failure on register room");
-            }
+            if (hotelApp.addRoom(r) != -1) System.out.println("Room successfully registered");
+            else System.out.println("Failure on register room");
         } else {
             System.out.println("Error getting room");
         }
@@ -166,9 +171,9 @@ public class Main {
     }
 
     /**
-     * Asks user to input all values from a room
+     * Asks user to input all values of a room
      *
-     * @return an entity room with values
+     * @return a room or null in case of error
      */
     private Room inputRoom() {
         try {
@@ -200,45 +205,36 @@ public class Main {
     }
 
     /**
-     * Asks the user a room to display all customers hosted in that room, finally reports to user
+     * Asks the user to input a number of a room, if the room contains customers hosted will display them if not reports to the user the failure
      */
-    private void displayCustomersRoom() {
+    private void displayCustomersInRoom() {
         try {
             String sRoom = inputString("Enter number room: ");
             int room = Integer.parseInt(sRoom);
             List<Customer> customers = hotelApp.findCustomersInRoom(new Room(room));
-            if (!customers.isEmpty()) {
-                customers.forEach(e -> System.out.println(e.toString()));
-            } else {
-                System.out.println("No customers hosted in this room");
-            }
+            if (!customers.isEmpty()) customers.forEach(e -> System.out.println(e.toString()));
+            else System.out.println("No customers hosted in this room");
         } catch (NumberFormatException nfe) {
             System.out.println("Error on parsing values");
         }
     }
 
     /**
-     * Displays all customers hosted in hotel, finally reports to user
+     * Displays to the user all customers hosted in the hotel, if there are it display otherwise reports to user the failure
      */
-    private void displayCustomersHotel() {
+    private void displayAllCustomersHotel() {
         List<Customer> clients = hotelApp.getOccupiedRooms();
-        if (!clients.isEmpty()) {
-            clients.forEach(e -> System.out.println(e.toString()));
-        } else {
-            System.out.println("No rooms in hotel");
-        }
+        if (!clients.isEmpty()) clients.forEach(e -> System.out.println(e.toString()));
+        else System.out.println("No rooms in hotel");
     }
 
     /**
-     * Displays to user all rooms from hotel, then reports to user
+     * Displays to user all rooms from hotel, if there are it displays otherwise reports to user
      */
     private void displayAllRooms() {
         List<Room> rooms = hotelApp.getRooms();
-        if (!rooms.isEmpty()) {
-            displayList(rooms);
-        } else {
-            System.out.println("No rooms to display");
-        }
+        if (!rooms.isEmpty()) displayList(rooms);
+        else System.out.println("No rooms to display");
     }
 
     /**
@@ -299,7 +295,6 @@ public class Main {
         menu.add("Modify room");
         menu.add("Check-in customers to room");
         menu.add("Check-out customers from room");
-        //menu.add("Percentage of used room");
     }
 
     /**
