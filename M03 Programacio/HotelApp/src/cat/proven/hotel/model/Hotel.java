@@ -144,6 +144,8 @@ public class Hotel {
      */
     public int checkOutCustomers(Room room) {
         if (hotel.containsKey(room)) {
+            List<Customer> currentList = findCustomersInRoom(room);
+            if (currentList.isEmpty()) return -2;
             List<Customer> empty = new ArrayList<>();
             hotel.put(room, empty);
             return 0;

@@ -49,14 +49,21 @@ public class Main {
      * Displays a list of rooms, asks the user to input a room then process to check out the room selected and then reports to the user
      */
     private void checkOut() {
-        List<Room> rooms = hotelApp.getRooms();
-        int choice = displaySelectorRoom(rooms);
-        if (choice >= 0 && choice <= rooms.size()) {
-            Room roomSelected = rooms.get(choice);
-            if (hotelApp.checkOutCustomers(roomSelected) != -1) System.out.println("Room successfully checked out");
-            else System.out.println("Error on checking out room");
+        String sCode = inputString("Enter the code room to check out: ");
+        int code = Integer.parseInt(sCode);
+        Room selectRoom = hotelApp.findRoom(new Room(code));
+        if (selectRoom != null) {
+            System.out.println(selectRoom);
+            if (confirm("Are you sure you want to check out? [True|true/False|false] ")) {
+                int result = hotelApp.checkOutCustomers(selectRoom);
+                if (result == 0) System.out.println("Successfully check out");
+                if (result == -1) System.out.println("Error on check out room");
+                if (result == -2) System.out.println("The room is already empty");
+            } else {
+                System.out.println("Canceled by user");
+            }
         } else {
-            System.out.println("Invalid room");
+            System.out.println("No room found by code given");
         }
     }
 
@@ -77,18 +84,26 @@ public class Main {
         List<Room> possibleRooms = hotelApp.getRoomsToCustomers(customers, category);
 
         if (!possibleRooms.isEmpty()) {
-            int choice = displaySelectorRoom(possibleRooms);
-            if (choice >= 0 && choice < possibleRooms.size()) {
-                Room roomSelected = possibleRooms.get(choice);
-                for (int i = 0; i < customers; i++) {
-                    System.out.println("REGISTERING CUSTOMER " + (i + 1) + ":");
-                    Customer newCustomer = inputCustomer();
-                    newCustomers.add(newCustomer);
+            try {
+                for (int i = 0; i < possibleRooms.size(); i++) System.out.format("%d. %s\n", i, possibleRooms.get(i));
+                String sChoice = inputString("Enter de code room: ");
+                int choice = Integer.parseInt(sChoice);
+                if (hotelApp.findRoom(new Room(choice)) != null) {
+                    Room roomSelected = hotelApp.findRoom(new Room(choice));
+                    System.out.println(roomSelected);
+                    for (int i = 0; i < customers; i++) {
+                        System.out.println("REGISTERING CUSTOMER " + (i + 1) + ":");
+                        Customer newCustomer = inputCustomer();
+                        newCustomers.add(newCustomer);
+                    }
+                    if (hotelApp.checkInCustomers(roomSelected, newCustomers) != -1)
+                        System.out.println("Customer successfully registered");
+                    else System.out.println("Error on registering customers");
+                } else {
+                    System.out.println("Hotel selected don't found");
                 }
-                if (hotelApp.checkInCustomers(roomSelected, newCustomers) != -1) System.out.println("Customer successfully registered");
-                else System.out.println("Error on registering customers");
-            } else {
-                System.out.println("Incorrect choice of room");
+            } catch (NumberFormatException nfe) {
+                System.out.println("Error on parsing value");
             }
         } else {
             System.out.println("No rooms found with what you want");
@@ -251,25 +266,6 @@ public class Main {
      * @return a valid option if its correct or -1 in case of exception
      */
     private int displaySelector(List<String> list) {
-        Scanner sc = new Scanner(System.in);
-        for (int i = 0; i < list.size(); i++) System.out.format("%d. %s\n", i, list.get(i));
-        System.out.print("Enter your option: ");
-        int option;
-        try {
-            option = sc.nextInt();
-        } catch (InputMismatchException ime) {
-            option = -1;
-        }
-        return option;
-    }
-
-    /**
-     * Displays a list of options and user interacts given an option
-     *
-     * @param list list of options to print out
-     * @return a valid option if its correct or -1 in case of exception
-     */
-    private int displaySelectorRoom(List<Room> list) {
         Scanner sc = new Scanner(System.in);
         for (int i = 0; i < list.size(); i++) System.out.format("%d. %s\n", i, list.get(i));
         System.out.print("Enter your option: ");
