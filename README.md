@@ -9,3 +9,7 @@ Temario, apuntes, examenes y ejercicios del módulo de Desarrollo de Aplicacione
 - Tècniques avançades de desenvolupament
 - Disseny d'interfícies
 - Programació
+- Proyectos
+
+## Proyectos
+- [Exploding Kittens](https://github.com/jordirocha/2nDAW/tree/main/Projectes/xkittens_jordi): es una aplicación web desarrollada con Laravel con funcionalidades CRUD.
