@@ -1,0 +1,216 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="link-success nb-color-primary" [routerLink]="['/home']"><i
+                class="fa-solid fa-house-medical"></i> </a>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row text-white">
+  <!-- Earnings (Monthly) Card Example -->
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary  h-100 py-2 nb">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col-6">
+            <div class="illustration-text">
+              <h4 class="illustration-text">¡Bienvenido de nuevo, {{ user.first_name }} {{ user.last_name }}!</h4>
+              <p class="mb-0">Intranet NBSalut</p>
+            </div>
+          </div>
+          <div class="col-6 align-self-center text-center">
+            <img src="assets/images/logo2.png" alt="Customer Support" class="img-fluid illustration-img">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Earnings (Monthly) Card Example -->
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success  h-100 py-2 nb">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="d-flex align-items-start">
+            <div class="flex-grow-1">
+              <h3 class="mb-2">{{ totalVisits }}</h3>
+              <p class="mb-2">Visitas</p>
+            </div>
+            <div class="col-6 align-self-center text-center">
+              <div class="stat fs-1 ">
+                <i class="fas fa-light fa-file-medical"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success  h-100 py-2 nb">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="d-flex align-items-start">
+            <div class="flex-grow-1">
+              <h3 class="mb-2">{{ totalInvoices }}</h3>
+              <p class="mb-2">Facturas</p>
+            </div>
+            <div class="col-6 align-self-center text-center">
+              <div class="stat fs-1 ">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success  h-100 py-2 nb">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="d-flex align-items-start">
+            <div class="flex-grow-1">
+              <h3 class="mb-2">{{ totalPatients }}</h3>
+              <p class="mb-2">Total Pacientes</p>
+            </div>
+            <div class="col-6 align-self-center text-center">
+              <div class="stat fs-1 ">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Nuevos pacientes añadidos</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="table-responsive" style="border-radius:10px !important;">
+              <table class="table table-bordered table-striped table-hover align-middle text-center">
+                <thead>
+                  <tr class="nb text-white text-uppercase align-middle">
+                    <th scope="col">NÚMERO CLÍNICO</th>
+                    <th scope="col">PACIENTE</th>
+                    <th scope="col">NIF / NIE</th>
+                    <th scope="col">EMAIL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let patient of lastsPatients">
+                    <td>{{ patient.id }}</td>
+                    <td>{{ patient.first_name }} {{ patient.last_name }} </td>
+                    <td>{{ patient.dni }}</td>
+                    <td>{{ patient.email }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Nuevas visitas</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="table-responsive" style="border-radius:10px !important;">
+              <table class="table table-bordered table-striped table-hover align-middle text-center">
+                <thead>
+                  <tr class="nb text-white text-uppercase align-middle">
+                    <th scope="col">FECHA</th>
+                    <th scope="col">PROFESIONAL</th>
+                    <th scope="col">PACIENTE</th>
+                    <th scope="col">DIABÉTICA</th>
+                    <th scope="col">HOJA SEGURIDAD SOCIAL</th>
+                    <th scope="col">TRATAMIENTO</th>
+                    <th scope="col">OBSERVACIONES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let visit of lastsVisits">
+                    <td>{{ visit.visit_date | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ visit.specialist_name }} {{ visit.specialist_lastname }}</td>
+                    <td>{{ visit.first_name }} {{ visit.last_name }} </td>
+                    <td>
+                      <span class="badge rounded-pill" [ngClass]="visit.diabetic ? 'bg-success' : 'bg-danger'">
+                        {{ visit.diabetic ? "Sí" : "No" }}
+                      </span>
+                    </td>
+                    <td><span class="badge rounded-pill" [ngClass]="visit.ss_CIP != '' ? 'bg-success' : 'bg-danger'">
+                        {{ visit.ss_CIP != "" ? "Sí" : "No" }}
+                      </span></td>
+                    <td>{{ visit.name }}</td>
+                    <td>{{ visit.visit_description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Últimas facturas</h3>
+          </div>
+
+          <div class="card-body">
+            <div class="table-responsive" style="border-radius:10px !important;">
+              <table class="table table-bordered table-striped table-hover align-middle text-center">
+                <thead>
+                  <tr class="nb text-white text-uppercase align-middle">
+                    <th>Nº Factura</th>
+                    <th>Fecha</th>
+                    <th>Nombre del paciente</th>
+                    <th>Dirección</th>
+                    <th>DNI</th>
+                    <th>Tratamiento</th>
+                    <th>Precio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let invoice of lastInvoices">
+                    <td>{{ invoice.invoice_number }}</td>
+                    <td>{{ invoice.invoice_date | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ invoice.first_name }} {{ invoice.last_name }}</td>
+                    <td>{{ invoice.address }}, {{ invoice.postal_code }}</td>
+                    <td>{{ invoice.dni }}</td>
+                    <td>{{ invoice.name }}</td>
+                    <td>{{ invoice.price }} €</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

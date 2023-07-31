@@ -1,0 +1,212 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a class="link-success nb-color-primary" [routerLink]="['/home']"><i
+                class="fa-solid fa-house-medical"></i> </a>
+          </li>
+          <li class="breadcrumb-item active">Lista Facturas & Envío
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-3">
+  <div class="card-header">Lista Facturas & Envío</div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-3">
+        <button class="btn btn-success me-md-2" (click)="export()" type="button"><i
+            class="bi bi-file-earmark-excel"></i> Exportar Excel</button>
+        <button class="btn nb text-white" (click)="openFormModal()" [disabled]="params.sent != 'pending'"><i
+            class="bi bi-check2-all"></i> Marcar
+          como facturadas</button>
+      </div>
+      <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-3">
+        <button class="btn btn-success me-md-2" (click)="export()" type="button"><i
+            class="bi bi-file-earmark-excel"></i> Exportar Excel</button>
+        <button class="btn nb text-white" [disabled]="params.sent != 'pending'"><i class="bi bi-check2-all"></i> Marcar
+          como enviadas</button>
+      </div> -->
+    </div>
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-4">
+        <select class="form-select" [(ngModel)]="params.sent" (change)="getSelected()"
+          aria-label="Default select example">
+          <option value="" selected>Todo</option>
+          <option value="sent">Enviados</option>
+          <option value="pending">Pendientes</option>
+        </select>
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <input type="text" ngxDaterangepickerMd [showClearButton]="true"
+          [locale]="{applyLabel: 'ok', format: 'DD/MM/YYYY'}" [lockStartDate]="false" placeholder="Seleccionar fechas "
+          (change)="ngModelChange($event)" class="form-control" />
+      </div>
+      <div class="col-sm-12 col-md-4">
+        <div class="input-group">
+          <div class="input-group-text" id="btnGroupAddon"><i class="bi bi-search"></i></div>
+          <input type="text" placeholder="Buscar nombre, apellido o DNI" class="form-control" [(ngModel)]="inputSearch"
+            (ngModelChange)="search()">
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive" style="border-radius:10px !important;">
+      <table class="table table-bordered table-striped table-hover align-middle text-center">
+        <thead>
+          <tr class="nb text-white text-uppercase align-middle">
+            <th>Nº Factura</th>
+            <th>Fecha</th>
+            <th>Nombre del paciente</th>
+            <th>Dirección</th>
+            <th>DNI</th>
+            <th>Tratamiento</th>
+            <th>Precio</th>
+            <th>Factura</th>
+            <th>Recibo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let invoice of invoices | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }">
+            <td>{{ invoice.num_factura }}</td>
+            <td>{{ invoice.fecha | date:'dd/MM/yyyy' }}</td>
+            <td>{{ invoice.nombre }} {{ invoice.apellidos }}</td>
+            <td>{{ invoice.direccion }}, {{ invoice.codigo_postal }}</td>
+            <td>{{ invoice.dni }}</td>
+            <td>{{ invoice.tratamiento }}</td>
+            <td>{{ invoice.precio }} €</td>
+            <!-- <td><a [routerLink]="['/invoice', invoice.id]" target="_blank">Ver Factura</a></td>
+            <td><a [routerLink]="['/receipt', invoice.id]" target="_blank">Ver Recibo</a></td> -->
+            <td><a (click)="getInvoice(invoice.id)">Ver Factura</a></td>
+            <td><a (click)="getReceipt(invoice.id)">Ver Factura</a></td>
+            <td>
+              <span class="badge rounded-pill" [ngClass]="invoice.sent ? 'bg-success' : 'bg-warning'">
+                {{ invoice.sent ? "Enviada" : "Pendiente" }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-end custom-pagination">
+        <pagination-controls (pageChange)="currentPage = $event" nextLabel="" previousLabel=""></pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="dataToPrint" class="card">
+  <div class="card-header">{{typeInvoice ? 'Factura' : 'Recibo'}}  </div>
+  <div class="card-body">
+    <div id="invoice" class="container">
+      <div style="width: 750px" class="mx-auto">
+        <div class="d-flex justify-content-center mb-5">
+          <img src="assets/images/logo-imprimir.jpg" height="130px" class="img-responsive">
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-xl-12">
+            <ul class="list-unstyled float-start">
+              <li>{{ dataToPrint[0].first_name }} {{ dataToPrint[0].last_name }}</li>
+              <li>DNI. {{ dataToPrint[0].dni }} Núm Col. {{ dataToPrint[0].collegiate_num }}</li>
+              <li>C. CHAFARINAS 14-16 BAJOS LOCAL.</li>
+              <li>08033 BARCELONA</li>
+              <li>TELF. 93 353 41 42</li>
+            </ul>
+          </div>
+        </div>
+
+
+        <div *ngIf="typeInvoice" class="row mt-5 mb-3" style="border:1pt solid black;">
+          <ul class="list-unstyled float-start">
+            <li>DATOS DEL PACIENTE </li>
+            <li>NOMBRE COMPLETO: {{ dataToPrint[1].first_name }} {{ dataToPrint[1].last_name }}</li>
+            <li>DNI: {{ dataToPrint[1].dni }}</li>
+            <li>DIRECCION: {{ dataToPrint[1].address }}, {{ dataToPrint[1].postal_code }}</li>
+          </ul>
+        </div>
+
+        <div *ngIf="typeInvoice" class="row mb-3" style="border:1pt solid black;">
+          <div class="col-6">
+            NUM DE FACTURA: {{ dataToPrint[0].invoice_number }}
+          </div>
+          <div class="col-6" style="border-left:1pt solid black;">
+            FECHA: {{ dataToPrint[0].invoice_date  | date: 'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+        <div *ngIf="!typeInvoice" class="row mt-5 mb-3" style="border:1pt solid black;">
+          <div class="col-12">
+            RECIBO DE: {{ dataToPrint[1].first_name }} {{ dataToPrint[1].last_name }}
+          </div>
+        </div>
+
+        <div *ngIf="!typeInvoice" class="row mb-3" style="border:1pt solid black;">
+          <div class="col-12" style="border-left:1pt solid black;">
+            FECHA: {{ dataToPrint[0].invoice_date  | date: 'dd/MM/yyyy' }}
+          </div>
+        </div>
+
+
+        <div class="row">
+          <table class="table table-bordered border-dark">
+            <thead>
+              <tr>
+                <th scope="col">CANTIDAD</th>
+                <th scope="col">TRATAMIENTO</th>
+                <th scope="col">PRECIO</th>
+                <th scope="col">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="height:500px !important;">{{ dataToPrint[0].quantity }}</td>
+                <td>{{ dataToPrint[0].name }}</td>
+                <td>{{ dataToPrint[0].price }} €</td>
+                <td>{{ dataToPrint[0].total_price }} €</td>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <th scope="col">FORMA DE PAGO</th>
+                <td scope="col" class="text-capitalize">{{ dataToPrint[0].payment_type }}</td>
+                <th scope="col">TOTAL</th>
+                <td scope="col">{{ dataToPrint[0].total_price }} €</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="container">
+      <button class="btn btn-success me-1" (click)="download()">Descargar Factura</button>
+      <button class="btn btn-success" (click)="close()">Cerrar Factura</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Facturación trimestral</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Se procederá a marcar <strong>{{ invoices.length }} facturas</strong> como facturas. ¿Confirmar operación?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="saveSomeThing()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
